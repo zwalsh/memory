@@ -3,45 +3,59 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 export default function game_init(root) {
-  ReactDOM.render(<Starter />, root);
+  ReactDOM.render(<GameBoard />, root);
 }
 
-class Starter extends React.Component {
+class GameBoard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { left: false };
+    this.state = {
+      clicks: 0,
+      board: this.genBoard(),
+      num_visible: 0,
+    };
+    console.log("GameBoard made");
   }
 
-  swap(_ev) {
-    let state1 = _.assign({}, this.state, { left: !this.state.left });
-    this.setState(state1);
-  }
+  genBoard() {
+    let board = [];
+    let chars = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'];
 
-  hax(_ev) {
-    alert("hax!");
+    for (let i = 0; i < 4; i++) {
+      let row = [];
+      board.push(row);
+      for (let j = 0; j < 4; j++) {
+        let index = Math.floor(Math.random() * chars.length);
+        let c = chars[index];
+        chars = chars.slice(0, index).concat(chars.slice(index + 1));
+        let tile = {
+          letter: c,
+          visible: false,
+          matched: false,
+        };
+        row.push(tile);
+      }
+    }
+    return board;
   }
 
   render() {
-    let button = <div className="column" onMouseMove={this.swap.bind(this)}>
-      <p><button onClick={this.hax.bind(this)}>Click Me</button></p>
-    </div>;
+    let board = _.map(this.state.board, (row, i) => {
+      let tiles = _.map(row, (tile, j) => {
+        return <Tile key={i * this.state.board.length + j} tile={tile}/>
+      });
+      return <div key={100 + i} className="row">{tiles}</div>
+    });
 
-    let blank = <div className="column">
-      <p>Nothing here.</p>
-    </div>;
-
-    if (this.state.left) {
-      return <div className="row">
-        {button}
-        {blank}
-      </div>;
-    }
-    else {
-      return <div className="row">
-        {blank}
-        {button}
-      </div>;
-    }
+    return <div className="container">{ board }</div>;
   }
+}
+
+function Tile(props) {
+  let tile = props.tile;
+  console.log(props);
+  return <div key={props.key} className="column">
+    {tile.letter}
+  </div>;
 }
 
