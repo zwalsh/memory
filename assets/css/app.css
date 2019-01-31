@@ -2,8 +2,55 @@
 
 @import "~milligram/dist/milligram";
 
-.column > p {
-    padding-top: 10ex;
+.visible > p, .matched > p {
+    width: 100%;
+    height: 100%;
+    padding: 13px;
     text-align: center;
 }
+
+.title {
+    text-align: center;
+}
+
+.container {
+    max-width: 450px;
+}
+
+.tile {
+    height: 100px;
+    width: 100px;
+}
+
+.reset {
+    display: block;
+    width: 50%;
+    height: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden, .matched, .visible {
+    padding: 10px;
+    width: 80px;
+    height: 80px;
+    border-style: solid;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.matched {
+    color: green;
+    border-color: green;
+}
+
+.hidden {
+    background: gray;
+}
+
+.hidden:hover {
+    background: lightgray;
+}
+
 
