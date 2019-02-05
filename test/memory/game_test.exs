@@ -9,11 +9,30 @@ defmodule Memory.GameTest do
   end
 
   test "build board" do
-    assert length(Memory.Game.gen_board(16)) == 4
-    [row | _rest] = Memory.Game.gen_board(36)
-    assert length(row) == 6
-    [tile | _tiles] = row
-    %{letter: _, state: s} = tile
+    board = Memory.Game.gen_board(16)
+    assert length(board) == 16
+    [tile | _tiles] = board
+    %{letter: _, state: s, index: i} = tile
     assert s == "hidden"
+    assert i == 0
+  end
+
+  test "visible count" do
+    board = Memory.Game.gen_board(16)
+    assert Memory.Game.visible_count(board) == 0
+    board = [%{:letter => "A", :state => "visible"},
+      %{:letter => "A", :state => "visible"}, 
+      %{:letter => "A", :state => "visible"},
+      %{:letter => "A", :state => "hidden"}]
+    assert Memory.Game.visible_count(board) == 3
+  end
+
+  test "match?" do
+    board = [%{letter: "A", state: "visible", index: 0},
+      %{letter: "A", state: "hidden", index: 1},
+      %{letter: "B", state: "visible", index: 2}]
+    assert !Memory.Game.match?(board, 0)
+    assert Memory.Game.match?(board, 1) 
+    assert !Memory.Game.match?(board, 2)
   end
 end

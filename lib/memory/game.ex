@@ -10,32 +10,19 @@ defmodule Memory.Game do
 
   # Generates a board with the given number of tiles
   def gen_board(size) do
-    width = size
-            |> :math.sqrt
-            |> Float.ceil
-            |> trunc
-    letters = tile_letters(width * width)
-    grid = build_grid(letters, width, [], [])
-    Enum.map(grid, fn row -> letters_to_tiles(row) end)
+    size
+    |> tile_letters()
+    |> letters_to_tiles(0)
   end
 
   # Creates a list of tile objects out of a list of letters
-  def letters_to_tiles(letters) do
-    Enum.map(letters, fn l -> %{letter: l, state: "hidden"} end)
-  end
-  
-  # builds a board from the given letters, accumulating the current row
-  # and board, with each row being width letters long
-  def build_grid([], _width, row, board) do
-    [row | board]
+  def letters_to_tiles([l | rest_letters], index) do
+    first = %{letter: l, state: "hidden", index: index}
+    [first | letters_to_tiles(rest_letters, index + 1)]
   end
 
-  def build_grid(letters, width, row, board) when length(row) == width do
-    build_grid(letters, width, [], [row | board])
-  end
-
-  def build_grid([l | rest], width, row, board) do
-    build_grid(rest, width, [l | row], board)
+  def letters_to_tiles([], index) do 
+    []
   end
 
   # Creates a random list of tiles with the given number of letters
@@ -57,6 +44,39 @@ defmodule Memory.Game do
     gen_char_list(char_code + 1, num_chars - 1, l)  
   end
 
+  # indicates how many tiles are currently visible on the board
+  def visible_count(board) do
+    board
+    |> Enum.count(&(&1.state == "visible"))
+  end
+
+  # returns true if a click at the given index creates a match
+  def match?(tiles, index) do
+    {:ok, %{letter: clicked_letter}} = Enum.fetch(tiles, index) 
+    tiles
+    |> Enum.any?(fn tile -> tile.index != index 
+    && tile.letter == clicked_letter 
+    && tile.state == "visible" end)
+  end
+
+  # returns the next board after a click at the given location
+  def next_board(board, index) do
+
+  end
+
+  def next_tile(tile, clicked_tile, match?) do
+      
+  end
+
+  # returns a new game indicating the state after a click
+  # at the index
+  def tile_clicked(game, index) do
+    visible = visible_count(game.board)
+    if visible >= 2 do
+      game
+    end
+
+  end
 
 
 end
