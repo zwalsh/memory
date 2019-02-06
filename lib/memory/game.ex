@@ -21,7 +21,7 @@ defmodule Memory.Game do
     [first | letters_to_tiles(rest_letters, index + 1)]
   end
 
-  def letters_to_tiles([], index) do 
+  def letters_to_tiles([], _index) do 
     []
   end
 
