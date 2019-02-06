@@ -51,7 +51,7 @@ defmodule Memory.Game do
   end
 
   # returns true if a click at the given index creates a match
-  def match?(tiles, index) do
+  def match_made?(tiles, index) do
     {:ok, %{letter: clicked_letter}} = Enum.fetch(tiles, index) 
     tiles
     |> Enum.any?(fn tile -> tile.index != index 
@@ -61,11 +61,29 @@ defmodule Memory.Game do
 
   # returns the next board after a click at the given location
   def next_board(board, index) do
-
+    {:ok, clicked} = Enum.fetch(board, index)
+    match = match_made?(board, index)
+    Enum.map(board, &(next_tile(&1, clicked, match)))
   end
 
-  def next_tile(tile, clicked_tile, match?) do
-      
+  def next_tile(tile, clicked_tile, match_made?) do
+    %{letter: l, index: i} = tile
+    cond do
+      tile == clicked_tile ->
+        if match_made? do
+          %{letter: l, state: "matched", index: i}
+        else 
+          %{letter: l, state: "visible", index: i}
+        end
+      tile.letter == clicked_tile.letter ->
+        if match_made? do
+          %{letter: l, state: "matched", index: i}
+        else 
+          tile
+        end
+      true -> 
+        tile
+    end
   end
 
   # returns a new game indicating the state after a click
@@ -75,8 +93,23 @@ defmodule Memory.Game do
     if visible >= 2 do
       game
     end
-
+    %{board: next_board(game.board, index),
+      clicks: game.clicks + 1}
   end
 
 
+  # switches the visible tile to hidden
+  def hide_tile(tile) do
+    if tile.state == "visible" do
+      %{letter: tile.letter, state: "hidden", index: tile.index}
+    else
+      tile
+    end
+  end
+
+  # returns a new game where all visible tiles are hidden
+  def hide_all(game) do
+    b = Enum.map(game.board, &(hide_tile(&1)))
+    %{board: b, clicks: game.clicks}
+  end
 end
