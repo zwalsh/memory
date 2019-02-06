@@ -112,4 +112,20 @@ defmodule Memory.Game do
     b = Enum.map(game.board, &(hide_tile(&1)))
     %{board: b, clicks: game.clicks}
   end
+
+  # returns a version of the tile without the letter, if
+  # the tile is supposed to be hidden
+  def client_tile(tile) do
+    if tile.state == "hidden" do
+      %{index: tile.index, state: tile.state}
+    else
+      tile
+    end
+  end
+
+  # returns a view where letters are only included in visible
+  # tiles
+  def client_view(game) do
+    %{board: Enum.map(game.board, &(client_tile(&1))), clicks: game.clicks}
+  end
 end
