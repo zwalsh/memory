@@ -9,7 +9,9 @@ export default function game_init(root, channel) {
             console.log("Joined successfully", resp)
             ReactDOM.render(<GameBoard channel={channel} game={resp.game}/>, root);
         })
-        .receive("error", resp => { console.log("Unable to join", resp) });
+        .receive("error", resp => {
+            console.log("Unable to join", resp)
+        });
 }
 
 class GameBoard extends React.Component {
@@ -17,15 +19,20 @@ class GameBoard extends React.Component {
         super(props);
         this.channel = props.channel;
         this.state = props.game;
+        this.channel.on("update", resp => {
+            this.update(resp)
+        });
+    }
+
+    // updates the board with the new game state
+    update(response) {
+        console.log("update", response);
+        this.setState(response.game);
     }
 
     // handles a click at the given location, informing the channel of the change
     tileClicked(index) {
         this.channel.push("click", {index: index})
-            .receive("ok", resp => {
-                console.log(resp.game);
-                this.setState(resp.game);
-            })
             .receive("error", resp => {
                 console.log(resp);
             });
@@ -34,7 +41,9 @@ class GameBoard extends React.Component {
     // resets the game and creates a new board
     reset() {
         this.channel.push("reset")
-            .receive("ok", resp => { this.setState(resp.game); });
+            .receive("error", resp => {
+                console.log(resp);
+            });
     }
 
     render() {
