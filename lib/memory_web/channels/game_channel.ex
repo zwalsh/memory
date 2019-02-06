@@ -16,7 +16,7 @@ defmodule MemoryWeb.GameChannel do
 
   # Channels can be used in a request/response fashion
   # by sending replies to requests from the client
-  def handle_in("click", %{index: index}, socket) do
+  def handle_in("click", %{"index" => index}, socket) do
     g = socket.assigns[:game]
     updated = Game.tile_clicked(g, index)
     socket = socket
@@ -25,10 +25,18 @@ defmodule MemoryWeb.GameChannel do
     {:reply, {:ok, %{game: view}}, socket}
   end
 
-  def handle_in("click", _, socket) do
+  def handle_in("click", payload, socket) do
     {:reply, 
-      {:error, %{message: "Bad click request: missing index field"}}, 
+      {:error, %{message: "Bad click request: missing index field: " <> payload}}, 
       socket}
+  end
+
+  # Resets the game, creating a new one and storing it on the socket
+  def handle_in("reset", _, socket) do
+    g = Game.new()
+    socket = socket
+             |> assign(:game, g)
+    {:reply, {:ok, %{game: Game.client_view(g)}}, socket}
   end
 
   # Add authorization logic here as required.

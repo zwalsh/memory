@@ -38,7 +38,7 @@ class GameBoard extends React.Component {
     }
 
     render() {
-        if (!this.state.board) {
+        if (!this.state.board && this.state.clicks) {
             return null;
         }
 
