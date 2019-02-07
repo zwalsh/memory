@@ -1,0 +1,47 @@
+
+Web Dev Fall 2018 HW04 Status
+
+Answer the following questions:
+
+1. What's your name?
+Zach Walsh
+
+
+2. What's the URL of the github repo with your work for this HW?
+https://github.com/zwalsh/memory
+
+
+3. What's the version number of your github release?
+2
+
+
+4. What's the URL that you deployed to?
+http://memory2.zachwal.sh
+
+
+
+5. Is your game functionality complete? If not, what's missing?
+Yes, it's complete.
+
+
+
+6. Is your game properly deployed? If not, what went wrong?
+It is properly deployed
+
+
+
+7. How did you handle cards flipping back after a set timeout?
+When two cards become visible, the server uses the
+:timer Erlang module to schedule a function call that hides
+all the cards and broadcasts the result to everyone listening
+on the topic. This is how all changes happen, so multiple people
+could be in the same room at the same time, which means data 
+races are possible. It seemed better than keeping state
+on the channel, though.
+
+
+
+And here's a list of tasks for grading comments. Just leave this here:
+ - Development
+ - Deployment
+ - Submission
