@@ -1,7 +1,12 @@
 defmodule MemoryWeb.PageController do
   use MemoryWeb, :controller
 
-  def index(conn, _params) do
-    render conn, "index.html"
+  def index(conn, params) do
+    game = params["game"]
+    if game do
+      render conn, "game.html", game: game
+    else
+      render conn, "index.html"
+    end
   end
 end

@@ -21,8 +21,12 @@ import game_init from "./starter-game";
 import socket from "./socket";
 
 $(() => {
-  let channel = socket.channel("game:demo", {});
-  let root = $('#root')[0];
-  game_init(root, channel);
+  let addr = new URL(window.location.href);
+  let game = addr.searchParams.get("game");
+  if (game) {
+    let channel = socket.channel("game:" + game, {});
+    let root = $('#root')[0];
+    game_init(root, channel, game);
+  }
 });
 

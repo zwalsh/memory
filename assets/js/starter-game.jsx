@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
-export default function game_init(root, channel) {
+export default function game_init(root, channel, room) {
     console.log("Game init");
     channel.join()
         .receive("ok", resp => {
             console.log("Joined successfully", resp)
-            ReactDOM.render(<GameBoard channel={channel} game={resp.game}/>, root);
+            ReactDOM.render(<GameBoard channel={channel} game={resp.game} room={room}/>, root);
         })
         .receive("error", resp => {
             console.log("Unable to join", resp)
@@ -19,6 +19,7 @@ class GameBoard extends React.Component {
         super(props);
         this.channel = props.channel;
         this.state = props.game;
+        this.room = props.room;
         this.channel.on("update", resp => {
             this.update(resp)
         });
@@ -63,7 +64,7 @@ class GameBoard extends React.Component {
         });
 
         return <div>
-            <h1 className="title">Memory Game</h1>
+            <h1 className="title">Memory Game: {this.room}</h1>
             <div>
                 <h2 className="title clicks">Clicks: {this.state.clicks}</h2>
                 <Reset clickHandler={this.reset.bind(this)}/>

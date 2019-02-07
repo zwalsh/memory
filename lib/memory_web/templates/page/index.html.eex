@@ -1,3 +1,7 @@
-<div id="root">
-  React app loading...
+<div id="home-page-root">
+  <h1 style="text-align: center;">Join a Game!</h1>
+  <form>
+    <input type="text" name="game" placeholder="Enter game name here..."/>
+    <input type="submit" value="Join"/>
+  </form>
 </div>
