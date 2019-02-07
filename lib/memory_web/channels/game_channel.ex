@@ -24,12 +24,10 @@ defmodule MemoryWeb.GameChannel do
       {:reply, {:error, "Uninitialized game: " <> name}, socket}
     end
     if Game.visible_count(g.board) >= 2 do
-      IO.puts("visible count over 2")
       {:noreply, socket}
     else 
       updated = Game.tile_clicked(g, index)
       if Game.visible_count(updated.board) >= 2 do
-        IO.puts("hiding tiles")
         _ = hide_tiles(socket, updated)
       end
       with :ok <- set_game_and_notify(socket, updated) do

@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 export default function game_init(root, channel, room) {
-    console.log("Game init");
     channel.join()
         .receive("ok", resp => {
             console.log("Joined successfully", resp)
@@ -27,7 +26,6 @@ class GameBoard extends React.Component {
 
     // updates the board with the new game state
     update(response) {
-        console.log("update", response);
         this.setState(response.game);
     }
 

@@ -27,7 +27,7 @@ defmodule Memory.Game do
 
   # Creates a random list of tiles with the given number of letters
   def tile_letters(num_letters) do
-    gen_char_list(128512, div(num_letters + 1, 2), [])
+    gen_char_list(128070, div(num_letters + 1, 2), [])
     |> Enum.shuffle
   end
 
